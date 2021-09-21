@@ -8,26 +8,27 @@ public class manage : MonoBehaviourPunCallbacks
 {
 
     public Text timerText;
-    int currentPlayerCount = 1;
     public bool startTimer = false;
+
+    int currentPlayerCount = 1;
     double timerIncrementValue;
     double startTime;
-    double timer = 30;
+    double timer = 20;
     ExitGames.Client.Photon.Hashtable CustomValue;
     static bool isConnect = false;
 
     void Update()
     {
-        if (!startTimer) return;
+        if ( !startTimer ) return;
 
         timerIncrementValue = PhotonNetwork.Time - startTime;
-        timerText.text ="Waiting for other players.\nThe Game will start in "+Mathf.Round((float)(timer - timerIncrementValue)).ToString() + " seconds.";
+        timerText.text = "Waiting for other players.\nThe Game will start in " + Mathf.Round((float)(timer - timerIncrementValue)).ToString() + " seconds.";
         Debug.Log("timer: " + timerIncrementValue);
-        if (timerIncrementValue >= timer)
+        if ( timerIncrementValue >= timer )
         {
             //oyuncular hareket edebilsin
             move.isStart = true;
-            if (PhotonNetwork.IsMasterClient)
+            if ( PhotonNetwork.IsMasterClient )
                 StartCoroutine(addBots());
             startTimer = false;
             timerText.gameObject.SetActive(false);
@@ -62,7 +63,7 @@ public class manage : MonoBehaviourPunCallbacks
         Debug.Log("Joined Room");
         GameObject gameObject = PhotonNetwork.Instantiate("player", new Vector3(Random.Range(-4, 4), 0, Random.Range(-3, 3)), Quaternion.identity, 0, null);
         gameObject.GetComponent<PhotonView>().Owner.NickName = "Reve" + Random.Range(1, 100);
-        if (PhotonNetwork.IsMasterClient && isConnect)
+        if ( PhotonNetwork.IsMasterClient && isConnect )
         {
             CustomValue = new ExitGames.Client.Photon.Hashtable();
             startTime = PhotonNetwork.Time;
@@ -82,9 +83,9 @@ public class manage : MonoBehaviourPunCallbacks
     IEnumerator addBots()
     {
         yield return new WaitForSeconds(0.1f);
-        if (PhotonNetwork.IsMasterClient)
+        if ( PhotonNetwork.IsMasterClient )
         {
-            for (int i = currentPlayerCount; i < 3; i++)
+            for ( int i = currentPlayerCount; i < 4; i++ )
             {
                 PhotonNetwork.Instantiate("playerAI", new Vector3(Random.Range(-4, 4), 0, Random.Range(-3, 3)), Quaternion.identity, 0, null);
             }
@@ -134,7 +135,7 @@ public class manage : MonoBehaviourPunCallbacks
         GUILayout.BeginHorizontal();
         GUILayout.Label("Status: " + PhotonNetwork.NetworkClientState);
 
-        if (!PhotonNetwork.IsConnected || PhotonNetwork.NetworkClientState != ClientState.JoinedLobby)
+        if ( !PhotonNetwork.IsConnected || PhotonNetwork.NetworkClientState != ClientState.JoinedLobby )
         {
             GUI.enabled = false;
         }
